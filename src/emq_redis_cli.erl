@@ -30,6 +30,10 @@ set(Key, Value) ->
 get(Key) ->
     ecpool:with_client(?APP, fun(C) -> eredis:q(C, ["GET", Key]) end).
 
+-spec(del(string()) -> {ok, undefined | binary() | list()} | {error, atom() | binary()}).
+del(Key) ->
+    ecpool:with_client(?APP, fun(C) -> eredis:q(C, ["DEL", Key]) end).
+
 -spec(smembers(string()) -> {ok, undefined | binary() | list()} | {error, atom() | binary()}).
 smembers(Key) ->
     ecpool:with_client(?APP, fun(C) -> eredis:q(C, ["SMEMBERS", Key]) end).

@@ -47,14 +47,15 @@ load(Env) ->
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId}, _Env) ->
     io:format("client ~s connected, connack: ~w~n", [ClientId, ConnAck]),
-    emq_redis_cli:set(string:concat("client_", [ClientId]), "online"),
+    %emq_redis_cli:set(string:concat("client_", [ClientId]), "online"),
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId, username = Username}, _Env) ->
     %io:format("client ~s disconnected, reason: ~w~n", [ClientId, Reason]),
-    {ok, Uid} = emq_redis_cli:get(Username),
-    {ok, Result} = emq_redis_cli:srem(Uid, ClientId),
-    io:format("Uid ~s client_id ~s remove Success ~s (disconnected), reasion: ~w~n", [Uid, ClientId, Result, Reason]),
+    {ok, Uid} = emq_redis_cli:get(string:concat("mqtt_", [Username])),
+    {ok, SremResult} = emq_redis_cli:srem(Uid, ClientId),
+    {ok, DelResult} = emq_redis_cli:del(string:concat("mqtt_", [Username])),
+    io:format("Uid ~s client_id ~s remove Success ~s (disconnected), reasion: ~w~n", [Uid, ClientId, SremResult, Reason]),
     ok.
 
 on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
