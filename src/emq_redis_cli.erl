@@ -8,7 +8,7 @@
 
 -define(ENV(Key, Opts), proplists:get_value(Key, Opts)).
 
--export([connect/1, set/2, get/1, smembers/1, srem/2, rpush/2]).
+-export([connect/1, set/2, get/1, del/1,smembers/1, srem/2, rpush/2]).
 
 %%--------------------------------------------------------------------
 %% Redis Connect/Query
